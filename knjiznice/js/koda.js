@@ -281,6 +281,7 @@ function dodajMeritve() {
             data: JSON.stringify(podatkiMeritev),
             success: function (res) {
                 $("#sporociloDodajanjeMeritev").html("<span class='obvestilo label label-success fade-in'>Meritve so bile uspešno shranjene.</span");
+                e=0;
             },
             error: function(err) {
                 $("#sporociloDodajanjeMeritev").html(

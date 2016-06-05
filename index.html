@@ -6,10 +6,45 @@
   <link href="knjiznice/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {padding-top: 70px;}
+    #glavnaTabela {
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 20px 0;
+    }
+    #nasloviVTabeli {
+      text-align: center;
+    }
+    .gumb {margin-top:10px;}
+   
+   .bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.axis {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+   
+   
   </style>
   <script src="knjiznice/js/jquery-2.2.3.min.js"></script>
   <script src="knjiznice/js/bootstrap.min.js"></script>
   <script src="knjiznice/js/koda.js"></script>
+  <script src="//d3js.org/d3.v3.min.js"></script>
 </head>
 <body>
 
@@ -21,15 +56,14 @@
           <span class="sr-only">Prikaži menu</span>
           <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
         </button>
-        <!-- ZAČETEK: Merjenje krvnega tlaka in telesne teže -->
-        <a class="navbar-brand" href="index.html">{Merjenje krvnega tlaka in telesne teže}</a>
-        <!-- KONEC: Merjenje krvnega tlaka in telesne teže -->
+        <!-- ZAČETEK: Analiza vitalnih znakov -->
+        <a class="navbar-brand" href="index.html">{Analiza vitalnih znakov}</a>
       </div>
       <div class="collapse navbar-collapse" id="menujska-vrstica">
         <ul class="nav navbar-nav">
           <li><a href="opis.html">Opis ideje</a></li>
           <li><a href="nacrt.html">Načrt informacijske rešitve</a></li>
-          <li><a href="#">Generiranje podatkov</a></li>
+          <li><a href="#generirajUporabnike" onclick="generirajUporabnike()">Generiranje podatkov</a></li>
         </ul>
       </div>
     </div>
@@ -40,7 +74,102 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
-        <p class="lead"><strong>TO-DO</strong>: Na tem mestu implementirajte vašo aplikacijo.</p>
+        <table id="glavnaTabela">
+          <tr>
+            <td width="50%">
+              <table> <!--tabela za vnos novega uporabnika -->
+                <tr>
+                  <div id="nasloviVTabeli">Vnos novega uporabnika</div>
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Vnos imena</span></div>
+                  <input id="vnosImena" type="text" class="form-control input-mini" placeholder="Vnesite svoje ime">
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Vnos priimka</span></div>
+                  <input id="vnosPriimka" type="text" class="form-control input-mini" placeholder="Vnesite svoj priimek">
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Vnos datuma rojstva</span></div>
+                  <input id="vnosDatumRojstva" type="text" class="form-control input-mini" placeholder="Datum oblike: leto-mesec-danTura-minuta">
+                </tr>
+                <tr>
+                  <button type="button" class="gumb btn-primary btn-xs" onclick="dodajNovegaUporabnika()">Dodaj novega uporabnika</button>
+                  <span id = "sporociloDodajanjeUporabnika"></span>
+                </tr>
+              </table>
+               <table> <!-- izbira uporabnika-->
+                <tr>
+                  <div id="nasloviVTabeli">Izbira že obstoječega uporabnika</div>
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Izbira uporabnika</span></div>
+                  <select class="form-control input-sm" id="preberiUporabnika">
+                  <option value=""></option>
+                  </select>
+                </tr>
+                <tr>
+                  <button type="button" class="gumb btn-primary btn-xs" onclick="izberiUporabnika()">Izberi uporabnika</button>
+                  <span id = "sporociloIzbiranjeUporabnika"></span>
+                </tr>
+              </table>
+            </td>
+            <td width="50%">
+              <table> <!-- vnos meritev-->
+                <tr>
+                  <div id="nasloviVTabeli">Vnos meritev</div>
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Datum meritve</span></div>
+                  <input id="vnosDatumMeritve" type="text" class="form-control input-mini" placeholder="Datum oblike: leto-mesec-danTura-minuta">
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Telesna višina</span></div>
+                  <input id="vnosTelesnaVisina" type="text" class="form-control input-mini" placeholder="Vnesite telesno višino">
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Telesna Teža</span></div>
+                  <input id="vnosTelesneTeze" type="text" class="form-control input-mini" placeholder="Vnesite telesno težo">
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Diastolični krvni tlak</span></div>
+                  <input id="vnosDiastolicni" type="text" class="form-control input-mini" placeholder="Vnesite diastolični (spodnji) krvni tlak">
+                </tr>
+                <tr>
+                  <div align="left"><span class="label label-default">Sistolični krvni tlak</span></div>
+                  <input id="vnosSistolicni" type="text" class="form-control input-mini" placeholder="Vnesite sistolični (zgornji) krvni tlak">
+                </tr>
+                <tr>
+                  <button type="button" class="gumb btn-primary btn-xs" onclick="dodajMeritve()">Shrani meritve</button>
+                  <span id="sporociloDodajanjeMeritev"></span>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+         <table> <!-- prikaz meritev -->
+                <tr>
+                   <div id="nasloviVTabeli">Analiza meritev</div>
+                </tr>
+                <tr>
+                  <button type="button" class="gumb btn-primary btn-xs" onclick="prikaz()">Prikaži pretekle meritve (vedno pritisnite 2x)</button>
+                  <span id = "sporociloPrikazMeritev"></span>
+                </tr>
+                <tr>
+                  <td>
+                    <div id="prikaziMeritve"></div>
+                  </td>
+                  <td>
+                    <div class="panel-body">
+                      <div class="panel panel-default" id="napraviGraf" style="border-color: 0xFFFFFF; border: 0px;">
+                        <div id="graf"></div>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+          </table>
+          <div id="feedbackSporocilo"></div>
+          <div id="feedbackSporocilo2"></div>
       </div>
     </div>
   </div>
